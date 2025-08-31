@@ -142,6 +142,7 @@ if __name__ == "__main__":
     total_hours, total_minutes, total_duration = calculate_total_duration()
     st.markdown(f"**Total Duration: {total_duration}**")
     df = prepare_data_for_download()
+    df.index = df.index + 1 
 
     st.subheader("Sheet Preview")
     st.dataframe(df)
