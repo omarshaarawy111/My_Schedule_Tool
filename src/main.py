@@ -469,7 +469,7 @@ if __name__ == "__main__":
             <img src="https://1000logos.net/wp-content/uploads/2017/03/Nestle-Logo.png" alt="Nestlé Logo" width="120" style="margin-bottom: 10px;" />
         </a>    
             <h4 style='font-size: 22px;'>🚀 Made with ❤️ by the <b>Web & Search Team</b> – NBS Cairo</h4>
-            <h4 style='font-size: 16px;'>📌 Authority : <a href="mailto:omar.shaarawy@eg.nestle.com"><b>Omar Shaarawy</b></a> | Version 2.3.0</h4>
+            <h4 style='font-size: 16px;'>📌 Authority : <a href="mailto:omar.shaarawy@eg.nestle.com"><b>Omar Shaarawy</b></a> | Version 2.0.0</h4>
         </div>
         """,
         unsafe_allow_html=True
