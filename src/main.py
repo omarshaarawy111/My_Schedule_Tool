@@ -11,7 +11,23 @@ def trigger_notification(message):
 
 def add_new_task():
     st.session_state.row_count += 1
-    st.session_state.tasks.append({"task_id": st.session_state.row_count})
+    new_id = st.session_state.row_count
+    st.session_state.tasks.append({"task_id": new_id})
+    if new_id > 1:
+        prev_id = new_id - 1
+        prev_end_h = int(st.session_state.get(f"end_hours_{prev_id}", "09"))
+        prev_end_m = int(st.session_state.get(f"end_minutes_{prev_id}", "01"))
+        prev_end_total = prev_end_h * 60 + prev_end_m
+        new_start_total = prev_end_total + 1
+        new_start_h = (new_start_total // 60) % 24
+        new_start_m = new_start_total % 60
+        st.session_state[f"start_hours_{new_id}"] = f"{new_start_h:02d}"
+        st.session_state[f"start_minutes_{new_id}"] = f"{new_start_m:02d}"
+        new_end_total = new_start_total + 1
+        new_end_h = (new_end_total // 60) % 24
+        new_end_m = new_end_total % 60
+        st.session_state[f"end_hours_{new_id}"] = f"{new_end_h:02d}"
+        st.session_state[f"end_minutes_{new_id}"] = f"{new_end_m:02d}"
     trigger_notification("New task added!")
 
 def remove_task(task_id):
@@ -41,8 +57,8 @@ def validate_end_time(task_id):
     if f"start_hours_{task_id}" in st.session_state and f"end_hours_{task_id}" in st.session_state:
         start_h = int(st.session_state.get(f"start_hours_{task_id}", "09"))
         start_m = int(st.session_state.get(f"start_minutes_{task_id}", "00"))
-        end_h = int(st.session_state.get(f"end_hours_{task_id}", "10"))
-        end_m = int(st.session_state.get(f"end_minutes_{task_id}", "00"))
+        end_h = int(st.session_state.get(f"end_hours_{task_id}", "09"))
+        end_m = int(st.session_state.get(f"end_minutes_{task_id}", "01"))
         
         start_total = start_h * 60 + start_m
         end_total = end_h * 60 + end_m
@@ -59,8 +75,8 @@ def create_dynamic_clock_with_input(task_id, clock_type):
     clock_id = f"{clock_type}_clock_{task_id}"
     
     # Get current values from session state
-    default_hour = "09" if clock_type == "start" else "10"
-    default_minute = "00"
+    default_hour = "09"
+    default_minute = "00" if clock_type == "start" else "01"
     current_hour_str = st.session_state.get(f"{clock_type}_hours_{task_id}", default_hour)
     current_minute_str = st.session_state.get(f"{clock_type}_minutes_{task_id}", default_minute)
     current_hour = int(current_hour_str)
@@ -259,8 +275,8 @@ def create_task_with_dynamic_clocks(task_id):
             
             # Time inputs
             time_cols = st.columns([1, 0.05, 1])
-            default_end_h = "10"
-            default_end_m = "00"
+            default_end_h = "09"
+            default_end_m = "01"
             with time_cols[0]:
                 st.text_input(
                     "",
@@ -316,8 +332,8 @@ def calculate_total_duration():
         
         start_hours = st.session_state.get(f"start_hours_{task_id}", "09")
         start_minutes = st.session_state.get(f"start_minutes_{task_id}", "00")
-        end_hours = st.session_state.get(f"end_hours_{task_id}", "10")
-        end_minutes = st.session_state.get(f"end_minutes_{task_id}", "00")
+        end_hours = st.session_state.get(f"end_hours_{task_id}", "09")
+        end_minutes = st.session_state.get(f"end_minutes_{task_id}", "01")
         
         hours, minutes = calculate_total_time(start_hours, start_minutes, end_hours, end_minutes)
         
@@ -339,8 +355,8 @@ def prepare_data_for_download():
         
         start_hours = st.session_state.get(f"start_hours_{task_id}", "09")
         start_minutes = st.session_state.get(f"start_minutes_{task_id}", "00")
-        end_hours = st.session_state.get(f"end_hours_{task_id}", "10")
-        end_minutes = st.session_state.get(f"end_minutes_{task_id}", "00")
+        end_hours = st.session_state.get(f"end_hours_{task_id}", "09")
+        end_minutes = st.session_state.get(f"end_minutes_{task_id}", "01")
         
         start_time = f"{start_hours}:{start_minutes}"
         end_time = f"{end_hours}:{end_minutes}"
@@ -414,6 +430,10 @@ if __name__ == "__main__":
     if "row_count" not in st.session_state:
         st.session_state.row_count = 1
         st.session_state.tasks = [{"task_id": 1}]
+        st.session_state["start_hours_1"] = "09"
+        st.session_state["start_minutes_1"] = "00"
+        st.session_state["end_hours_1"] = "09"
+        st.session_state["end_minutes_1"] = "01"
     
     for task in list(st.session_state.tasks):
         create_task_with_dynamic_clocks(task["task_id"])
