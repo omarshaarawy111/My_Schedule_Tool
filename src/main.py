@@ -235,6 +235,7 @@ def create_task_with_dynamic_clocks(task_id):
                 key=f"task_desc_{task_id}",
                 placeholder="Enter task",
             )
+
         
         with cols[3]:
             # Start time with dynamic clock
