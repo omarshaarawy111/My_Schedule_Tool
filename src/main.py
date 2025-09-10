@@ -234,8 +234,7 @@ def create_task_with_dynamic_clocks(task_id):
                 "Task Name",
                 key=f"task_desc_{task_id}",
                 placeholder="Enter task",
-             )  
-
+            )
         
         with cols[3]:
             # Start time with dynamic clock
@@ -412,6 +411,11 @@ if __name__ == "__main__":
         }
         button[kind="primary"] {
             color: white !important;
+        }
+        /* Hide the helper text that says "Press Enter to apply" */
+        .stTextInput [data-testid="InputInstructions"] {
+            height: 0px;
+            visibility: hidden;
         }
         @media (prefers-color-scheme: dark) {
             .stTextInput > div > div > input {
